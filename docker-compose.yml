@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+
+        web:
+                image: arm32v6/nginx:1.19.6-alpine 
+                ports:
+                        - "80:80"
+                volumes:
+                        - "./web:/web"
+                        - "./site.conf:/etc/nginx/conf.d/default.conf"
+                networks:
+                        - rpi-nginx-network          
+        php:
+                image: vrestihnat/php-fpm-rpi-zero:8.0.1-alpine3.12 
+                environment:
+                        - COMPOSER_HOME=/var/cache/composer 
+                volumes:
+                        - "./web:/web"
+                        - "~/.composer:/var/cache/composer"  
+                        - "/etc/timezone:/etc/timezone:ro"
+                        - "/etc/localtime:/etc/localtime:ro"          
+                        - "./php/whatever.ini:/usr/local/etc/php/conf.d/whatever.ini"
+                networks:
+                        - rpi-nginx-network
+
+networks:
+           rpi-nginx-network:
+                          driver: bridge 

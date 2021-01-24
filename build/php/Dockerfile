@@ -1,0 +1,14 @@
+
+FROM arm32v6/php:8.0.1-fpm-alpine3.12
+
+
+COPY --from=arm32v6/composer /usr/bin/composer /usr/local/bin/composer
+
+
+ARG TZ='Europe/Prague'
+
+ENV DEFAULT_TZ ${TZ}
+
+#RUN mkdir tz
+#COPY tzdata-2020f-r0.apk  tz
+#RUN  cd tz && apk add --allow-untrusted tzdata-2020f-r0.apk
