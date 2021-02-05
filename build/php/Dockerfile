@@ -1,5 +1,5 @@
-
-FROM arm32v6/php:8.0.1-fpm-alpine3.12
+ARG TAG='8.0.1-fpm-alpine3.12'
+FROM arm32v6/php:${TAG}
 
 
 COPY --from=arm32v6/composer /usr/bin/composer /usr/local/bin/composer
