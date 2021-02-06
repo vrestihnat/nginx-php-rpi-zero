@@ -63,6 +63,7 @@ jobs:
         #run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ github.actor }} --password-stdin 
       - name: Push image
+        continue-on-error: true
         run: |
           #IMAGE_ID=${{ github.repository }}
           # Change all uppercase to lowercase
