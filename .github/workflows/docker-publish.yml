@@ -54,7 +54,7 @@ jobs:
           IMAGE_ID=${{ github.repository }}
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
+          echo IMAGE_ID=$IMAGE_ID
           cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_ID --build-arg "TAG=$IMAGE_NAME"
 
       - name: Log into registry
@@ -62,7 +62,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ github.actor }} --password-stdin 
       - name: Push image
         run: |
-
+          IMAGE_ID=${{ github.repository }}
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
