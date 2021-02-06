@@ -80,6 +80,7 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           echo IMAGE_NAME=$IMAGE_NAME
+          echo TARGET=${{ matrix.imgs }}
 
           [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$VERSION
           [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$VERSION
