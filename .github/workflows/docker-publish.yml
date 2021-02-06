@@ -52,11 +52,12 @@ jobs:
         run: cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg "TAG=$IMAGE_NAME"
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
+        #run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ github.actor }} --password-stdin 
       - name: Push image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          #IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=${{ github.repository }}
 
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -74,6 +75,7 @@ jobs:
           echo VERSION=$VERSION
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          
-          docker push $IMAGE_ID:$VERSION
+          [ "$VERSION" == "latest" ] && docker tag $IMAGE_NAME $IMAGE_ID:$IMAGE_NAME
+          #docker push $IMAGE_ID:$VERSION
+          docker push -a $IMAGE_NAME
     
