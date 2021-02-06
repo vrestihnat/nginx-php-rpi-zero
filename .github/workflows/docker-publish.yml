@@ -5,7 +5,6 @@ on:
     # Publish `main` as Docker `latest` image.
     branches:
       - main
-      - 8.0.1-alpine3.12
 
     # Publish `v1.2.3` tags as releases.
     tags:
@@ -16,7 +15,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: 8.0.1-fpm-alpine3.12
+  IMAGE_NAME: 8.0.2-fpm-alpine3.12
 
 jobs:
   # Run tests.
@@ -77,6 +76,7 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
+          echo IMAGE_NAME=$IMAGE_NAME
 
           docker tag $IMAGE_ID $IMAGE_ID:$VERSION
           [ "$VERSION" == "latest" ] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME
