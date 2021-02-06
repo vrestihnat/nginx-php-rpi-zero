@@ -1,5 +1,5 @@
 #!/bin/bash
 
 
-docker build -t vrestihnat/php-fpm-rpi-zero -f Dockerfile .
+docker build -t vrestihnat/php-fpm-rpi-zero:test -f Dockerfile .
 

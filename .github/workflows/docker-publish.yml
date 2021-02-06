@@ -41,17 +41,23 @@ jobs:
   push:
     # Ensure test job passes before pushing image.
     needs: test
-
+    strategy:
+        matrix:
+           imgs:
+                - base
+                - mysql
+                - pgsql
+                  
     runs-on: self-hosted
     if: github.event_name == 'push'
-
+    name: Build - Push  ${{ matrix.imgs }}    
     steps:
       - uses: actions/checkout@v2
 
       - name: Build image
         run: |
           echo IMAGE_ID=$IMAGE_ID
-          cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_ID --build-arg "TAG=$IMAGE_NAME"
+          cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_ID --build-arg "TAG=$IMAGE_NAME" --target ${{ matrix.imgs }}
 
       - name: Log into registry
         #run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -75,10 +81,12 @@ jobs:
           echo VERSION=$VERSION
           echo IMAGE_NAME=$IMAGE_NAME
 
-          docker tag $IMAGE_ID $IMAGE_ID:$VERSION
-          [ "$VERSION" == "latest" ] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME
-          #docker push --all-tags $IMAGE_ID
-          docker push $IMAGE_ID:$VERSION
-          [ "$VERSION" == "latest" ] && docker push $IMAGE_ID:$IMAGE_NAME
+          [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$VERSION
+          [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$VERSION
+
+          [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME
+          [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME
           
+          [[ "${{ matrix.imgs }}" != "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
+          [[ "${{ matrix.imgs }}" != "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
     
