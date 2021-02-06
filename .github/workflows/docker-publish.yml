@@ -81,13 +81,14 @@ jobs:
           echo VERSION=$VERSION
           echo IMAGE_NAME=$IMAGE_NAME
           echo TARGET=${{ matrix.imgs }}
-
+          
+          echo Push latest
           [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$VERSION
           [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$VERSION
-
+          echo Push base
           [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME
           [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME
-          
+          echo Push ${{ matrix.imgs }}
           [[ "${{ matrix.imgs }}" != "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
           [[ "${{ matrix.imgs }}" != "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
     
