@@ -15,8 +15,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: rpi
-  TAG: '8.0.1-fpm-alpine3.12'
+  IMAGE_NAME: '8.0.1-fpm-alpine3.12'
 
 jobs:
   # Run tests.
@@ -33,7 +32,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            cd ./build/php && docker build . --file Dockerfile --build-arg "TAG=$TAG"
+            cd ./build/php && docker build . --file Dockerfile --build-arg "TAG=$IMAGE_NAME"
           fi
 
   # Push image to GitHub Packages.
@@ -49,7 +48,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg "TAG=$TAG"
+        run: cd ./build/php && docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg "TAG=$IMAGE_NAME"
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -74,5 +73,5 @@ jobs:
           echo VERSION=$VERSION
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          [ "$VERSION" == "latest" ] && docker tag $IMAGE_NAME $IMAGE_ID:$TAG
-          docker push -a $IMAGE_ID:$VERSION
+
+          docker push $IMAGE_ID:$VERSION
