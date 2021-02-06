@@ -5,6 +5,7 @@ on:
     # Publish `main` as Docker `latest` image.
     branches:
       - main
+      - 8.0.1-alpine3.12
 
     # Publish `v1.2.3` tags as releases.
     tags:
