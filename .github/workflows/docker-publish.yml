@@ -76,6 +76,7 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           [ "$VERSION" == "latest" ] && docker tag $IMAGE_NAME $IMAGE_ID:$IMAGE_NAME
-          #docker push $IMAGE_ID:$VERSION
-          docker push -a $IMAGE_NAME
+          docker push $IMAGE_ID:$VERSION
+          [ "$VERSION" == "latest" ] && docker push $IMAGE_ID:$IMAGE_NAME
+          
     
