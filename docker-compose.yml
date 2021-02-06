@@ -11,7 +11,7 @@ services:
                 networks:
                         - rpi-nginx-network          
         php:
-                image: vrestihnat/php-fpm-rpi-zero:8.0.1-alpine3.12 
+                image: vrestihnat/php-fpm-rpi-zero:8.0.2-fpm-alpine3.12 
                 environment:
                         - COMPOSER_HOME=/var/cache/composer 
                 volumes:
