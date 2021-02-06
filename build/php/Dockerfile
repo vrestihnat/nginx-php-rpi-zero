@@ -9,6 +9,10 @@ ARG TZ='Europe/Prague'
 
 ENV DEFAULT_TZ ${TZ}
 
+RUN apk add --no-cache libzip-dev zip
+RUN docker-php-ext-install zip
+
+
 #RUN mkdir tz
 #COPY tzdata-2020f-r0.apk  tz
 #RUN  cd tz && apk add --allow-untrusted tzdata-2020f-r0.apk
