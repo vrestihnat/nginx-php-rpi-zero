@@ -1,5 +1,6 @@
 Docker nginx-php stack for the Raspberry pi zero
 ================================================
+![Docker](https://github.com/vrestihnat/nginx-php-rpi-zero/workflows/Docker/badge.svg)
 
 # Prerequisites
 - unix like OS armv6 (raspbian, dietPi, armbian, ubuntu, ...)
@@ -28,6 +29,14 @@ see https://en.wikipedia.org/wiki/Raspberry_Pi_OS#Linux_distributions
 ## run on background
 ```sh
 # docker-compose up -d
+```
+## run container with mysql support
+```sh
+# docker-compose -f docker-compose.yml -f docker-compose-mysql.yml up
+```
+## run container with pgsql support
+```sh
+# docker-compose -f docker-compose.yml -f docker-compose-pgsql.yml up
 ```
 # Stop container
 ## stop
