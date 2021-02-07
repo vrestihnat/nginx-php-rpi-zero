@@ -63,12 +63,12 @@ jobs:
         #run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ github.actor }} --password-stdin 
       - name: Push image
-        continue-on-error: true
+        #continue-on-error: true
         run: |
           #IMAGE_ID=${{ github.repository }}
           # Change all uppercase to lowercase
           #IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          
+          TARGET="-${{ matrix.imgs }}"
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
@@ -77,19 +77,23 @@ jobs:
 
           # Use Docker `latest` tag convention
           [ "$VERSION" == "main" ] && VERSION=latest
-
+          
+          [[ "${{ matrix.imgs }}" == "base" ]] && TARGET=""
+          
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           echo IMAGE_NAME=$IMAGE_NAME
-          echo TARGET=${{ matrix.imgs }}
+          echo TARGET=$TARGET
           
-          echo Push latest
+          echo Tag version - latest
           [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$VERSION
+          echo Tag Other $TARGET
+          [ "$VERSION" == "latest" ]  && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME$TARGET
+          
+          echo Push version - latest
           [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$VERSION
-          echo Push base
-          [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME
-          [ "$VERSION" == "latest" ] && [[ "${{ matrix.imgs }}" == "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME
-          echo Push ${{ matrix.imgs }}
-          [[ "${{ matrix.imgs }}" != "base" ]] && docker tag $IMAGE_ID $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
-          [[ "${{ matrix.imgs }}" != "base" ]] && docker push $IMAGE_ID:$IMAGE_NAME-${{ matrix.imgs }}
+          echo Push Other $TARGET 
+          [ "$VERSION" == "latest" ] && docker push $IMAGE_ID:$IMAGE_NAME$TARGET
+
     
+
